@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solo para ti</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: radial-gradient(circle at bottom, #000428, #004e92);
+    color:white;
+    text-align:center;
+    overflow:hidden;
+}
+
+/* Fondo estrellas */
+#estrellas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+}
+
+.estrella{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    animation:brillo 2s infinite alternate;
+}
+
+@keyframes brillo{
+    from{opacity:0.2;}
+    to{opacity:1;}
+}
+
+/* Pantallas */
+.pantalla{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:90%;
+    max-width:500px;
+}
+
+/* Inputs y botones */
+input{
+    padding:12px;
+    border-radius:12px;
+    border:none;
+    width:80%;
+    font-size:16px;
+    text-align:center;
+}
+
+button{
+    margin-top:15px;
+    padding:12px 25px;
+    border:none;
+    border-radius:25px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+#btnSi{
+    background:#ff4d6d;
+    color:white;
+}
+
+#btnNo{
+    position:absolute;
+    background:#555;
+    color:white;
+}
+
+/* Texto animado */
+#texto{
+    min-height:60px;
+    font-size:24px;
+    text-shadow:0 0 10px rgba(255,255,255,0.7);
+}
+
+/* Final */
+#final{
+    display:none;
+    height:100vh;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(to top, #000428, #004e92);
+}
+
+#final h1{
+    font-size:38px;
+    margin-bottom:20px;
+    text-shadow:0 0 15px hotpink;
+}
+
+#final img{
+    width:250px;
+    border-radius:20px;
+    box-shadow:0 0 30px hotpink;
+}
+</style>
+</head>
+
+<body>
+
+<div id="estrellas"></div>
+
+<!-- LOGIN -->
+<div id="login" class="pantalla">
+    <h2>Solo una persona en el mundo puede entrar aquí...</h2>
+    <input type="text" id="nombre" placeholder="Escribe tu nombre">
+    <br>
+    <button onclick="verificar()">Entrar</button>
+</div>
+
+<!-- CONTENIDO -->
+<div id="contenido" class="pantalla" style="display:none;">
+    <div id="texto"></div>
+    <button id="btnSi" onclick="mostrarFinal()">❤️ Sí me amas</button>
+    <button id="btnNo" onmouseover="moverNo()">💔 No</button>
+</div>
+
+<!-- FINAL -->
+<div id="final">
+    <h1>Entonces quédate conmigo 💖</h1>
+    <img src="foto.jpg" alt="Nuestra foto">
+    <!-- Audio personalizado (opcional) -->
+    <audio controls style="margin-top:20px; width:80%;">
+        <source src="audio-tuyo.mp3" type="audio/mpeg">
+    
+</div>
+
+<audio id="musica" preload="auto" loop>
+    <source src="musica-romantica.mp3" type="audio/mpeg">
+
+
+<script>
+// Estrellas
+for(let i=0;i<150;i++){
+    let e=document.createElement("div");
+    e.className="estrella";
+    e.style.left=Math.random()*100+"vw";
+    e.style.top=Math.random()*100+"vh";
+    e.style.animationDuration=(Math.random()*3+1)+"s";
+    document.getElementById("estrellas").appendChild(e);
+}
+
+// Mensajes
+const mensajes=[
+    "No sé en qué momento...",
+    "Pero te volviste mi lugar seguro...",
+    "Y ahora no imagino un día sin ti..."
+];
+
+let m=0, l=0;
+
+function verificar(){
+    let nombre=document.getElementById("nombre").value.trim().toLowerCase();
+    if(nombre==="sofi"){ // CAMBIA AQUÍ EL NOMBRE SI ES NECESARIO
+        document.getElementById("login").style.display="none";
+        document.getElementById("contenido").style.display="block";
+        escribir();
+    }else{
+        alert("No eres tú 😏");
+    }
+}
+
+function escribir(){
+    if(m<mensajes.length){
+        if(l<mensajes[m].length){
+            document.getElementById("texto").innerHTML+=mensajes[m].charAt(l);
+            l++;
+            setTimeout(escribir,60);
+        }else{
+            setTimeout(()=>{
+                document.getElementById("texto").innerHTML="";
+                l=0;
+                m++;
+                escribir();
+            },1200);
+        }
+    }
+}
+
+function moverNo(){
+    let b=document.getElementById("btnNo");
+    let maxX=window.innerWidth - b.offsetWidth - 20;
+    let maxY=window.innerHeight - b.offsetHeight - 20;
+    b.style.top=Math.random()*maxY+"px";
+    b.style.left=Math.random()*maxX+"px";
+}
+
+function mostrarFinal(){
+    document.getElementById("contenido").style.display="none";
+    document.getElementById("final").style.display="flex";
+}
+
+// Activar música con toque/pulso
+document.body.addEventListener('click', ()=>{
+    document.getElementById("musica").play().catch(()=>{
+        alert("Por favor activa la música manualmente 🎵");
+    });
+}, {once:true});
+</script>
+
+</body>
+</html>
